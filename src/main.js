@@ -1,5 +1,5 @@
 /* Manejo del DOM */
-const data = Object.values(window.POKEMON.pokemon);
+// const data = Object.values(window.POKEMON.pokemon);
 
 window.onload
 
@@ -99,6 +99,13 @@ document.getElementById("enterButton").addEventListener("click", () => {
           </select>
         </li>
         </div>
+        <!-- Muestra el gráfico -->
+        <div class="box-navbar px-5">
+        <li class="nav-item active">
+          <a class="nav-link button" id="goToGrafic" href="#"><strong>Ver gráfico de tipo</strong><span
+              class="sr-only">(current)</span></a>
+        </li>
+        </div>
       </ul>
     </div>
   </nav>
@@ -113,10 +120,33 @@ document.getElementById("enterButton").addEventListener("click", () => {
     <article id="showData" class="row" >
         <!-- Aquí se imprimen las cartas de cada pokemon -->
     </article>
+
+    <article id="draw-grafic">
+    <!-- Aquí se dibuja el gráfico -->
+    </article>
+
+  
     </section>
+
+<!-- hacer una función que me desplace hacia delante y atrás -->
+<!-- hacer una función que me itere los números de página. -->
+<!-- a continuación creo los botones -->
+<div>
+  <a href="#!" id="arrow_left" class="arrow">&#10094;</a>
+
+  <a href="#!" id="arrow_right" class="arrow">&#10095;</a>
+</div>
+    <footer row>
+      <h6 col-12>By NezuProject&reg; 🐀 </h6>
+    </footer>
     `
     
   //TARJETAS DE POKEMON.
+  fetch("https://raw.githubusercontent.com/AgathaP/SCL008-data-lovers/master/src/data/pokemon/pokemon.json")
+  .then(Response => Response.json())
+  .then(data => {
+      data = data.pokemon;
+
   data.forEach(element => {
     document.getElementById("showData").innerHTML += //Imprime tarjetas de pokemon //115 pongo el numero del pokemon.
       `<a class="cards col-6 col-sm-4	col-md-3 col-lg-3	col-xl-2 btn btn-primary" data-toggle="modal" data-target="#modal${element.id}"> 
@@ -128,6 +158,24 @@ document.getElementById("enterButton").addEventListener("click", () => {
       </a>`
   });
 
+//  let evolutions = function(){
+//       let result;
+//       let evo=0;
+//       for(let i = 0; i < data[i].next_evolution.length; i++){
+//          evo=data[i].next_evolution[i].name;
+//         result=evo;
+//       }
+//       return result;
+//       }
+
+// function evolutions(){
+// data.forEach(element => {
+//         for(let i = 0; i < element[i].next_evolution.length; i++){
+//         element[i].next_evolution[i].name;
+//         }
+// })
+// }
+
   // MODAL QUE MUESTRA LA INFORMACIÓN DE CADA POKEMON.
   function modal(pokeModal) {
     pokeModal.forEach(element => {
@@ -137,7 +185,7 @@ document.getElementById("enterButton").addEventListener("click", () => {
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-            <img src="${element.img}" alt="Imagen del pokemon">
+            <img src="${element.img}" alt="${element.name}">
               <h4 class="modal-title" id="exampleModalCenterTitle">${element.name}</h4>            
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -158,6 +206,10 @@ document.getElementById("enterButton").addEventListener("click", () => {
 
                 <dt><strong>Debilidades</strong></dt>
                 <dd>${element.weaknesses}</dd> 
+
+                <dt><strong>Evoluciones</strong></dt>
+                <dd>${element.next_evolution
+              }</dd> 
               
               </dl>
             </div>
@@ -266,9 +318,52 @@ document.getElementById("enterButton").addEventListener("click", () => {
   });
 });
 
+document.getElementById("goToGrafic").addEventListener("click", () => {
+  document.getElementById("showData").innerHTML = '';
+  document.getElementById("draw-grafic").innerHTML =
+// `
+// <script type="text/javascript">
+  // Load the Visualization API and the corechart package.
+  google.charts.load("current", {"packages":["corechart"]});
 
-// tiposDePokemon15=["Grass","Poison","Fire","Flying","Water","Bug","Normal",
-// "Electric","Ground","Fighting","Psychic","Rock","Ice","Ghost","Dragon"];
-// debilidadDePokemon17= ["Grass","Poison","Fire","Flying","Water","Bug", //NORMAL
-// "Electric","Ground","Fighting","Psychic","Rock","Ice","Ghost","Dragon",
-// "Fairy","Dark","Steel"];
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.charts.setOnLoadCallback(drawChart);
+
+  // Callback that creates and populates a data table,
+  // instantiates the pie chart, passes in the data and
+  // draws it.
+  function drawChart() {
+
+      // Create the data table.
+      let data = new google.visualization.DataTable();
+      data.addColumn("string", "Tipo");
+      data.addColumn("number", "cantidad");
+      data.addRows([
+      ["Grass", 14],
+      ["Poison", 33],
+      ["Fire", 12],
+      ["Flying", 19],
+      ["Water", 32],
+      ["Bug", 12],
+      ["normal", 24],
+      ["Electric", 9],
+      ["Ground", 14],
+      ["Fighting", 8],
+      ["Psychic", 14],
+      ["Rock", 11],
+      ["Ice", 5],
+      ["Ghost", 3],
+      ["Dragon", 3]
+      ]);
+
+      // Set chart options
+      let options = {"title":"Cantidad de pokemon existentes en la región de Canto",
+                      "width":400,
+                      "height":300};
+
+      // Instantiate and draw our chart, passing in some options.
+      let chart = new google.visualization.PieChart(document.getElementById("draw-grafic"));
+      chart.draw(data, options);
+  }
+});
+});

@@ -82,3 +82,11 @@ Otra de las mejoras que tenemos en cuenta, es una pantalla dónde se incluyan la
 
 * Constanza Jaime "Konna"   🐣 
 * Paula Sáez "Agatha"   🐀
+
+# hacker edition
+
+* [ ] Hacer paginación
+* [ ] Hacer gráfico
+* [ ] Poner footer
+* [ ] Pantalla o algo que indique como usar página
+* [ ] 
